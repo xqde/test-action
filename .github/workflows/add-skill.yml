@@ -1,0 +1,79 @@
+name: Add Skill from Issue
+
+on:
+  issues:
+    types: [opened, edited]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  add-skill:
+    if: contains(github.event.issue.labels.*.name, 'enhancement')
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Extract skill info from issue
+        id: extract
+        run: |
+          ISSUE_BODY="${{ github.event.issue.body }}"
+          
+          # 解析各字段 (### 三级标题格式)
+          # 使用 awk 跳过空行，获取第一个非空行
+          CATEGORY=$(echo "$ISSUE_BODY" | awk '/^### 分类$/{p=1; next} p && /^###/{exit} p && NF{print; exit}')
+          NAME=$(echo "$ISSUE_BODY" | awk '/^### 技能名称$/{p=1; next} p && /^###/{exit} p && NF{print; exit}')
+          URL=$(echo "$ISSUE_BODY" | awk '/^### 技能开源地址$/{p=1; next} p && /^###/{exit} p && NF{print; exit}')
+          DESCRIPTION=$(echo "$ISSUE_BODY" | awk '/^### 技能描述$/{p=1; next} p && /^###/{exit} p && NF{print; exit}')
+          
+          echo "提取结果:"
+          echo "  category=[$CATEGORY]"
+          echo "  name=[$NAME]"
+          echo "  url=[$URL]"
+          echo "  description=[$DESCRIPTION]"
+          
+          echo "category=$CATEGORY" >> $GITHUB_OUTPUT
+          echo "name=$NAME" >> $GITHUB_OUTPUT
+          echo "url=$URL" >> $GITHUB_OUTPUT
+          echo "description=$DESCRIPTION" >> $GITHUB_OUTPUT
+
+      - name: Add skill
+        run: |
+          python3 add_skill.py \
+            "${{ steps.extract.outputs.category }}" \
+            "${{ steps.extract.outputs.url }}" \
+            "${{ steps.extract.outputs.name }}" \
+            "${{ steps.extract.outputs.description }}"
+
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: add-skill-${{ github.event.issue.number }}
+          commit-message: "feat: add ${{ steps.extract.outputs.name }} skill"
+          title: "feat: add ${{ steps.extract.outputs.name }} skill"
+          body: |
+            ## 新增技能
+
+            - **名称**: ${{ steps.extract.outputs.name }}
+            - **分类**: ${{ steps.extract.outputs.category }}
+            - **描述**: ${{ steps.extract.outputs.description }}
+            - **地址**: ${{ steps.extract.outputs.url }}
+
+            由 Issue #${{ github.event.issue.number }} 提交
+
+            /close #${{ github.event.issue.number }}
+          labels: enhancement, auto-generated
+
+      - name: Comment on issue
+        run: |
+          echo "✅ 技能已添加并创建 PR！" >> $GITHUB_STEP_SUMMARY
