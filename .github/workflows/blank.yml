@@ -5,7 +5,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
-  
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -14,27 +14,25 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Run environment
+      - name: Run env
         run: env
 
-      - name: Create new branch and push
+      - name: Create branch and commit
         run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
           echo 1 > 1.txt
           git checkout -b add
-          git add .
+          git add 1.txt
           git commit -m "feat: add 1.txt"
           git push -u origin add
 
-      - name: Create Pull Request
+      - name: Create PR
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           source-branch: add
           base-branch: main
-          title: feat: add 1.txt
-          body: |
-            ## 新增
-            - 添加 1.txt 文件
-          labels: enhancement, auto-generated
+          title: "feat: add 1.txt"
+          body: "自动创建文件"
+          labels: enhancement
