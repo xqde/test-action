@@ -22,3 +22,14 @@ jobs:
           echo 1 > 1.txt
           git checkout -b "add"
           git add . && git commit -m "feat: add" && git push -u origin "add"
+      
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: add
+          base: main
+          title: add
+          body: |
+            ## 新增
+          labels: enhancement, auto-generated
