@@ -52,14 +52,17 @@ jobs:
             "${{ steps.extract.outputs.url }}" \
             "${{ steps.extract.outputs.name }}" \
             "${{ steps.extract.outputs.description }}"
-
-
+            
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: add-skill-${{ github.event.issue.number }}
-          commit-message: "feat: add ${{ steps.extract.outputs.name }} skill"
+          commit-message: |
+            feat: add ${{ steps.extract.outputs.name }} skill
+            - Category: ${{ steps.extract.outputs.category }}
+            - Description: ${{ steps.extract.outputs.description }}
+            - Issue: #${{ github.event.issue.number }}
           title: "feat: add ${{ steps.extract.outputs.name }} skill"
           body: |
             ## 新增技能
