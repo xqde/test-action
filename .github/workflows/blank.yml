@@ -22,17 +22,15 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           echo 1 > 1.txt
-          git checkout -b add
+          git checkout -b update-authors
           git add 1.txt
           git commit -m "feat: add 1.txt"
-          git push -u origin add
+          git push -u origin update-authors
 
-      - name: Create PR
-        uses: peter-evans/create-pull-request@v6
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v8
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          source-branch: add
-          base-branch: main
-          title: "feat: add 1.txt"
-          body: "自动创建文件"
-          labels: enhancement
+          commit-message: update authors
+          title: Update AUTHORS
+          body: Credit new contributors by updating AUTHORS
+          branch: update-authors
