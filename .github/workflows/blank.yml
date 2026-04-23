@@ -11,25 +11,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Run a one-line script
+      - name: Run environment
         run: env
 
-      - name: Create new branch
+      - name: Create new branch and push
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           echo 1 > 1.txt
-          git checkout -b "add"
-          git add . && git commit -m "feat: add" && git push -u origin "add"
-      
+          git checkout -b add
+          git add .
+          git commit -m "feat: add 1.txt"
+          git push -u origin add
+
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          branch: add
-          base: main
-          title: add
+          source-branch: add
+          base-branch: main
+          title: feat: add 1.txt
           body: |
             ## 新增
+            - 添加 1.txt 文件
           labels: enhancement, auto-generated
