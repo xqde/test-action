@@ -1,0 +1,63 @@
+name: Add Skill
+description: 提交新的技能到 awesome-skills
+title: "[Add Skill] "
+labels: ["enhancement"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 提交新技能
+
+        请填写以下信息来提交一个新的技能：
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: 分类
+      description: 选择技能所属的分类
+      options:
+        - 前端
+        - 后端
+        - 移动端
+        - AI/ML
+        - DevOps
+        - 其他
+    validations:
+      required: true
+
+  - type: input
+    id: name
+    attributes:
+      label: 技能名称
+      description: 技能的简短名称（英文）
+      placeholder: "例如: vercel-react-best-practices"
+    validations:
+      required: true
+
+  - type: input
+    id: url
+    attributes:
+      label: 技能开源地址
+      description: 技能仓库的完整URL
+      placeholder: "例如: https://github.com/vercel-labs/agent-skills"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: 技能描述
+      description: 简要描述技能的功能
+      placeholder: "例如: React 性能优化、组件设计、Next.js 页面开发"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: 确认
+      options:
+        - label: 我确认以上信息正确
+          required: true
