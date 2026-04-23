@@ -10,3 +10,11 @@ jobs:
 
       - name: Run a one-line script
         run: env
+
+      - name: Create new branch
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          echo 1 > 1.txt
+          git checkout -b "add"
+          git add . && git commit -m "feat: add && git push -u origin "add"
