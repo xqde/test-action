@@ -16,21 +16,14 @@ jobs:
 
       - name: Run env
         run: env
-
-      - name: Create branch and commit
-        run: |
-          git config --local user.name "github-actions[bot]"
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          echo 1 > 1.txt
-          git checkout -b update-authors
-          git add 1.txt
-          git commit -m "feat: add 1.txt"
-          git push -u origin update-authors
-
+        
+      - uses: actions/checkout@v6
+      - name: Download website
+        run:  echo 1> 1.xtx
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v8
         with:
-          commit-message: update authors
-          title: Update AUTHORS
-          body: Credit new contributors by updating AUTHORS
-          branch: update-authors
+          commit-message: update local website copy
+          title: Automated Updates to Local Website Copy
+          body: This is an auto-generated PR with website updates.
+          branch: website-updates
