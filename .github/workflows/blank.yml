@@ -17,4 +17,4 @@ jobs:
           git config --local user.name "github-actions[bot]"
           echo 1 > 1.txt
           git checkout -b "add"
-          git add . && git commit -m "feat: add && git push -u origin "add"
+          git add . && git commit -m "feat: add" && git push -u origin "add"
