@@ -14,16 +14,14 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Run env
-        run: env
-        
-      - uses: actions/checkout@v6
-      - name: Download website
-        run:  echo 1> 1.xtx
+      - name: Create file
+        run: echo 1 > 1.txt
+
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v8
+        uses: peter-evans/create-pull-request@v6
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: update local website copy
           title: Automated Updates to Local Website Copy
           body: This is an auto-generated PR with website updates.
-          branch: website-updates
+          branch: website-updates3
