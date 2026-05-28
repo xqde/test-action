@@ -13,7 +13,7 @@ jobs:
       - name: clone repo
         uses: actions/checkout@v4
         with:
-          repository: chihqiang/vscode-remcon
+          repository: chihqiang/vscode-copilot-models
           ref: main
 
       - name: Setup Node.js
