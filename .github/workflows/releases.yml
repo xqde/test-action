@@ -1,35 +1,42 @@
-name: releases
+name: go build
 
 on:
-  push:
-    tags:
-      - "v*"
+  release:
+    types: [ created ]
+
+permissions:
+  contents: write
+  packages: write
 
 jobs:
-  build:
+  release-linux-amd64:
+    name: release linux/amd64
     runs-on: ubuntu-latest
     steps:
-
-      - name: clone repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
-          repository: chihqiang/vscode-copilot-models
+          repository: chihqiang/sshfwd
           ref: main
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Set up Go
+        uses: actions/setup-go@v4
         with:
-          node-version: 20
-          cache: npm
+          go-version: '1.24'
 
-      - name: Install deps
-        run: npm ci
+      - name: Run Go Multi-Platform Build Action
+        id: build
+        uses: chihqiang/gobuild-action@main
+        with:
+          bin_name: sshfwd
+          version: ${{ github.ref_name }}
+          add_files: |
+            README.md
+            LICENSE
+          dist_root_path: dist
 
-      - name: Build
-        run: npm run package
-
-      - name: Upload artifact
+      - name: Upload release assets
         uses: chihqiang/upload-asset-action@develop
         with:
+          repo: xqde/sshfwd
           github_token: ${{ secrets.GH_TOKEN }}
-          files: ./*.vsix
+          files: ${{ env.GOBUILD_FILES }}
