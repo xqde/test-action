@@ -14,13 +14,12 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # macOS M1 (ARM64) 本机编译
           - os: macos-latest
             bundle: dmg
-          # macOS Intel (x86_64) 本机编译
-          - os: macos-13
+            arch: arm64
+          - os: macos-latest-large
             bundle: dmg
-          # Windows
+            arch: x64
           - os: windows-latest
             bundle: msi
 
@@ -41,6 +40,8 @@ jobs:
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.arch }}-apple-darwin
 
       - name: Install dependencies
         run: npm ci
