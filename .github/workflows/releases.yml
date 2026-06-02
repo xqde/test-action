@@ -1,9 +1,11 @@
 name: 'releases'
 
 on:
-  push:
-    tags:
-      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag name (e.g. Termix-v0.1.0)'
+        required: true
 
 jobs:
   publish-tauri:
@@ -49,8 +51,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
         with:
-          tagName: Termix-v__VERSION__
-          releaseName: 'Termix v__VERSION__'
+          tagName: ${{ github.event.inputs.tag }}
+          releaseName: ${{ github.event.inputs.tag }}
           releaseDraft: false
           prerelease: false
           args: ${{ matrix.args }}
