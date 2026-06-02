@@ -29,6 +29,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          repository: chihqiang/termix
+          ref: main
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
