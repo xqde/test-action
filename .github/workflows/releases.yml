@@ -1,56 +1,53 @@
-name: 'publish'
-
+name: publish
 on:
   push:
     tags:
       - 'v*'
 
+permissions:
+  contents: write
+
 jobs:
-  publish-tauri:
-    permissions:
-      contents: write
+  build:
     strategy:
       fail-fast: false
       matrix:
         include:
-          - platform: 'macos-latest'
-            args: '--target aarch64-apple-darwin'
-          - platform: 'windows-latest'
-            args: ''
-
-    runs-on: ${{ matrix.platform }}
+          - target: aarch64-apple-darwin
+            os: macos-latest
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
         with:
           repository: chihqiang/termix
-          ref: main
+          ref: ${{ github.ref_name }}
 
-      - name: setup node
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: lts/*
-          cache: 'npm'
 
-      - name: install Rust stable
+      - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
         with:
-          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+          targets: ${{ matrix.target }}
 
-      - name: Rust cache
-        uses: swatinem/rust-cache@v2
+      - name: Build & upload
+        uses: chihqiang/tauri-action@main
         with:
-          workspaces: './src-tauri -> target'
+          command: build
+          target: ${{ matrix.target }}
+          privateKey: ${{ secrets.TAURI_PRIVATE_KEY }}
+          tag: ${{ github.ref_name }}
+          repo: chihqiang/termix
 
-      - name: install frontend dependencies
-        run: npm install 
-
-      - uses: tauri-apps/tauri-action@v0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
+  finalize:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate updater.json
+        uses: chihqiang/tauri-action@main
         with:
-          tagName: Termix-v__VERSION__
-          releaseName: 'Termix v__VERSION__'
-          releaseDraft: false
-          prerelease: false
-          args: ${{ matrix.args }}
+          command: generate-updater
+          tag: ${{ github.ref_name }}
+          repo: chihqiang/termix
