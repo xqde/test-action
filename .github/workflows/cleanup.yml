@@ -1,0 +1,22 @@
+name: Cleanup
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cleanup
+        uses: chihqiang/gh-cleanup-action@main
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          keep_tag: 5
+          keep_release: 3
+          keep_run: 30
+          keep_branch: 10
+          dry_run: false
