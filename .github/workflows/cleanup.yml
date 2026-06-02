@@ -15,8 +15,8 @@ jobs:
         uses: chihqiang/gh-cleanup-action@main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          keep_tag: 5
-          keep_release: 3
-          keep_run: 30
-          keep_branch: 10
+          keep_tag: 1
+          keep_release: 1
+          keep_run: 1
+          keep_branch: 0
           dry_run: false
