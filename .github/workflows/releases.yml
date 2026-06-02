@@ -36,7 +36,3 @@ jobs:
 
       - name: Upload release assets
         uses: chihqiang/upload-asset-action@develop
-        with:
-          repo: xqde/sshfwd
-          github_token: ${{ secrets.GH_TOKEN }}
-          files: ${{ env.GOBUILD_FILES }}
