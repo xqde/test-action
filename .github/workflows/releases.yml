@@ -1,9 +1,11 @@
 name: 'publish'
 
+
 on:
   push:
     tags:
       - 'v*'
+
 
 jobs:
   publish-tauri:
@@ -19,11 +21,6 @@ jobs:
             args: ''
 
     runs-on: ${{ matrix.platform }}
-    env:
-      OPENSSL_STATIC: 1
-      PKG_CONFIG_ALLOW_CROSS: 1
-      RUSTUP_USE_DOWNLOAD: 1
-
     steps:
       - uses: actions/checkout@v4
         with:
@@ -47,7 +44,7 @@ jobs:
           workspaces: './src-tauri -> target'
 
       - name: install frontend dependencies
-        run: npm install
+        run: npm install 
 
       - uses: tauri-apps/tauri-action@v0
         env:
@@ -55,7 +52,6 @@ jobs:
         with:
           tagName: Termix-v__VERSION__
           releaseName: 'Termix v__VERSION__'
-          releaseBody: 'See the assets to download this version and install.'
           releaseDraft: false
           prerelease: false
           args: ${{ matrix.args }}
