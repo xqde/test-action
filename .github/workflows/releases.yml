@@ -38,8 +38,6 @@ jobs:
           command: build
           target: ${{ matrix.target }}
           privateKey: ${{ secrets.TAURI_PRIVATE_KEY }}
-          tag: ${{ github.ref_name }}
-          repo: chihqiang/termix
 
   finalize:
     needs: build
@@ -49,5 +47,3 @@ jobs:
         uses: chihqiang/tauri-action@main
         with:
           command: generate-updater
-          tag: ${{ github.ref_name }}
-          repo: chihqiang/termix
