@@ -1,11 +1,9 @@
 name: 'publish'
 
-
 on:
   push:
     tags:
       - 'v*'
-
 
 jobs:
   publish-tauri:
@@ -49,6 +47,7 @@ jobs:
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
         with:
           tagName: Termix-v__VERSION__
           releaseName: 'Termix v__VERSION__'
