@@ -6,7 +6,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Upload Python Package
+name: 
 
 on:
   workflow_dispatch:
@@ -19,7 +19,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Build release distributions
-        run: env
+      - uses: chihqiang/checkout-action@main
+      
+      - name: Push changes
+        run: |
+          echo "update" >> file.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "chore: auto update"
+          git push
