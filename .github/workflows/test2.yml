@@ -34,4 +34,4 @@ jobs:
         run: node -v
 
       - name: npm version
-        run: node -v
+        run:  npm -v
