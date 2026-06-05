@@ -1,8 +1,7 @@
-name: releases
+name: test2
+
 on:
-  push:
-    tags:
-      - 'v*'
+  workflow_dispatch:
 
 permissions:
   contents: write
