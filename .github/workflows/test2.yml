@@ -1,7 +1,8 @@
-name: test2
-
+name: releases
 on:
-  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
 
 permissions:
   contents: write
@@ -23,15 +24,33 @@ jobs:
         with:
           repository: chihqiang/termix
           ref: main
-          
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20.19
           cache: 'npm'
 
-      - name: node version
-        run: node -v
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
 
-      - name: npm version
-        run:  npm -v
+      - name: install frontend dependencies
+        run: npm install 
+        
+      - name: Build & upload
+        uses: chihqiang/tauri-action@main
+        with:
+          command: build
+          target: ${{ matrix.target }}
+          privateKey: ${{ secrets.TAURI_PRIVATE_KEY }}
+
+  finalize:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate updater.json
+        uses: chihqiang/tauri-action@main
+        with:
+          command: generate-updater
