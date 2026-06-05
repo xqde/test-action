@@ -1,4 +1,4 @@
-name: publish
+name: releases
 on:
   push:
     tags:
@@ -28,7 +28,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: lts/*
+          node-version: 20.19
           cache: 'npm'
 
       - name: Install Rust
