@@ -32,4 +32,4 @@ jobs:
   
 
       - name: upload-gh-release-assets
-        uses: chihqiang/upload-asset-action@v0.2.0
+        uses: chihqiang/upload-asset-action@main
