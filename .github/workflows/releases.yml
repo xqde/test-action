@@ -7,7 +7,6 @@ on:
 permissions:
   contents: write
 
-
 jobs:
   release-linux-amd64:
     name: release linux/amd64
@@ -28,8 +27,8 @@ jobs:
         uses: chihqiang/gobuild-action@main
         with:
           bin_name: sshfwd
-          version: ${{ github.ref_name }}
+          version: $ {{ github.ref_name }}
   
 
       - name: upload-gh-release-assets
-        uses: chihqiang/upload-asset-action@main
+        uses: ./.github/actions/upload-asset
