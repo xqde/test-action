@@ -1,8 +1,11 @@
 name: releases
+
 on:
+  workflow_dispatch:
   push:
     tags:
       - 'v*'
+  
 
 permissions:
   contents: write
@@ -27,5 +30,5 @@ jobs:
         uses: chihqiang/gobuild-action@develop
         with:
           bin_name: sshfwd
-          version: $ {{ github.ref_name }}
+          version: 0.0.1
   
