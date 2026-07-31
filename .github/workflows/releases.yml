@@ -31,4 +31,6 @@ jobs:
         with:
           bin_name: sshfwd
           version: 0.0.1
+      - name: upload-gh-release-assets
+        uses: chihqiang/upload-asset-action@v0.2.0
   
