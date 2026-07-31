@@ -17,8 +17,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          repository: chihqiang/sshfwd
-          ref: main
+          repository: containers/skopeo
+          ref: v1.24.0
         
       - name: Set up Go
         uses: actions/setup-go@v4
@@ -29,8 +29,13 @@ jobs:
         id: build
         uses: chihqiang/gobuild-action@develop
         with:
-          bin_name: sshfwd
-          version: 0.0.1
+          main_go: ./cmd/skopeo
+          archs: "linux/amd64 linux/arm64 linux/ppc64le darwin/amd64 darwin/arm64 windows/386 windows/amd64"
+          bin_name: skopeo
+          build_flags: "-mod=vendor '-buildmode=pie' -ldflags '-extldflags -static' -gcflags '' -tags 'exclude_graphdriver_devicemapper exclude_graphdriver_btrfs containers_image_openpgp'"
+          add_files: |
+            README.md
+            LICENSE
       - name: upload-gh-release-assets
         uses: chihqiang/upload-asset-action@v0.2.0
   
